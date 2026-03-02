@@ -1,0 +1,29 @@
+services:
+
+  log-processor:
+    build:
+      context: .
+      dockerfile: log-processor/Dockerfile
+    container_name: log-processor
+    ports:
+      - "8081:8081"
+
+  log-ingestion:
+    build:
+      context: .
+      dockerfile: log-ingestion/Dockerfile
+    container_name: log-ingestion
+    ports:
+      - "8080:8080"
+    depends_on:
+      - log-processor
+      - 
+
+  postgres:
+    image: postgres:16
+    environment:
+      POSTGRES_DB: logsdb
+      POSTGRES_USER: logs
+      POSTGRES_PASSWORD: logs
+    ports:
+      - "5432:5432"
