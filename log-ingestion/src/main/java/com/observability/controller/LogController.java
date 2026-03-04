@@ -1,27 +1,25 @@
 package com.observability.controller;
 
+import com.observability.dto.LogRequest;
+import com.observability.entity.TraceId;
+import com.observability.service.LogService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.client.RestTemplate;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/logs")
+@RequiredArgsConstructor
 public class LogController {
 
-    private final RestTemplate restTemplate = new RestTemplate();
+    private final LogService logService;
 
     @PostMapping
-    public ResponseEntity<String> receive(@RequestBody String log) {
-
-        restTemplate.postForObject(
-                "http://log-processor:8081/process",
-                log,
-                String.class
-        );
-
-        return ResponseEntity.ok("received");
+    public ResponseEntity<Void> createLog(
+            @RequestAttribute("traceId") TraceId traceId,
+            @RequestBody LogRequest logEntry
+    ) {
+        logService.publishLog(logEntry, traceId);
+        return ResponseEntity.accepted().build();
     }
 }

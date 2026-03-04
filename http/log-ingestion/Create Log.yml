@@ -1,0 +1,24 @@
+info:
+  name: Create Log
+  type: http
+  seq: 1
+
+http:
+  method: POST
+  url: http://localhost:8080/logs
+  body:
+    type: json
+    data: |-
+      {
+        "serviceName": "log-processor",
+        "level": "ERROR",
+        "message": "Falha ao processar evento de log",
+        "timestamp": "{{$timestamp}}"
+      }
+  auth: inherit
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5

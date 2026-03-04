@@ -1,2 +1,15 @@
+spring:
+  kafka:
+    bootstrap-servers: kafka:9092
+    consumer:
+      group-id: log-processor-group
+      auto-offset-reset: earliest
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+    properties:
+      reconnect.backoff.ms: 1000
+      reconnect.backoff.max.ms: 10000
+      retry.backoff.ms: 1000
+
 server:
   port: 8081
